@@ -1,0 +1,29 @@
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.message:{"Message": {"Body": {"Content": "this is a test, hopefully containing an attachment file", "ContentType": "Text"}, "ToRecipients": [{"EmailAddress": {"Name": "emil.saren", "Address": "emil.saren@ericsson.com"}}], "Attachments": [{"@odata.type": "#Microsoft.OutlookServices.FileAttachment", "Name": "re1.tar.gz"}], "Subject": "test"}, "SaveToSentItems": "false"}
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): outlook.office365.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/v1.0/me/sendmail HTTP/1.1" 400 None
+DEBUG:O365.message:response from server for sending message:<Response [400]>
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.message:{"Message": {"Body": {"Content": "this is a test, hopefully containing an attachment file", "ContentType": "Text"}, "ToRecipients": [{"EmailAddress": {"Name": "emil.saren", "Address": "emil.saren@ericsson.com"}}], "Attachments": [{"@odata.type": "#Microsoft.OutlookServices.FileAttachment", "ContentBytes": "YXNkCg==", "Name": "re1.txt"}], "Subject": "test"}, "SaveToSentItems": "false"}
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): outlook.office365.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/v1.0/me/sendmail HTTP/1.1" 202 0
+DEBUG:O365.message:response from server for sending message:<Response [202]>
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.message:{"Message": {"Body": {"Content": "this is a test, hopefully containing an attachment file", "ContentType": "Text"}, "ToRecipients": [{"EmailAddress": {"Name": "emil.saren", "Address": "emil.saren@ericsson.com"}}], "Attachments": [{"@odata.type": "#Microsoft.OutlookServices.FileAttachment", "Name": "re1.txt"}], "Subject": "test"}, "SaveToSentItems": "false"}
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): outlook.office365.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/v1.0/me/sendmail HTTP/1.1" 400 None
+DEBUG:O365.message:response from server for sending message:<Response [400]>
+DEBUG:O365.message:{"Message": {"Body": {"Content": "this is a test, hopefully containing an attachment file", "ContentType": "Text"}, "ToRecipients": [{"EmailAddress": {"Name": "emil.saren", "Address": "emil.saren@ericsson.com"}}], "Attachments": [{"@odata.type": "#Microsoft.OutlookServices.FileAttachment", "Name": "re1.txt"}], "Subject": "test"}, "SaveToSentItems": "false"}
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): outlook.office365.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/v1.0/me/sendmail HTTP/1.1" 400 None
+DEBUG:O365.message:response from server for sending message:<Response [400]>
+DEBUG:O365.attachment:error encoding attachment.
+DEBUG:O365.message:{"Message": {"Body": {"Content": "this is a test, hopefully containing an attachment file", "ContentType": "Text"}, "ToRecipients": [{"EmailAddress": {"Name": "emil.saren", "Address": "emil.saren@ericsson.com"}}], "Attachments": [{"@odata.type": "#Microsoft.OutlookServices.FileAttachment", "ContentBytes": "YXNkCg==", "Name": "re1.txt"}], "Subject": "test"}, "SaveToSentItems": "false"}
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): outlook.office365.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/v1.0/me/sendmail HTTP/1.1" 202 0
+DEBUG:O365.message:response from server for sending message:<Response [202]>

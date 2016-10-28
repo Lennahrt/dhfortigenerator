@@ -1,0 +1,153 @@
+import re
+
+
+class Network(object):
+
+    def __init__(self,data):
+        self.vdom = data[0]
+        self.id = data[1]
+        self.name = data[2]
+        self.short_name = data[3]
+        self.vlan = data[4]
+        self.terminator = data[5]
+        self.ipv4address = data[6]
+        self.ipv6address = data[7]
+        self.ipv4netmask = data[8]
+        self.ipv6netmask = data[9]
+        self.ipv4gateway = data[10]
+        self.ipv6gateway = data[11]
+        self.ipv6capable = data[12]
+        self.located_on_dreamhack = self.name.startswith('EVENT@')
+        self.is_link_net = self.short_name.startswith('FW-IN-')
+        self.is_outside_nw = not((self.terminator != 'D-ASR-V' or 'D-FW-V') and self.name.startswith('EVENT@'))
+
+            
+    def get_value(self):
+        lol = network_id_relates_to_internet
+        return lol
+            
+            
+    def ipv4_network_dumpconfig(self):
+        ret = '\nedit ' + self.short_name + '_IPV4_NET'
+        ret += '\nset subnet ' + self.ipv4address
+        ret += '\nend'
+        return ret
+
+    def ipv4_host_dumpconfig(self):
+        ret = '\nedit ' + self.short_name + '_' + self.ipv4address
+        ret += '\nset subnet ' + self.ipv4address
+        ret += '\nend'
+        return ret
+
+    def ipv6_network_dumpconfig(self):
+        ret = '\nedit ' + self.short_name + '_IPV6_NET'
+        ret += '\nset ip6 ' + self.ipv6address
+        ret += '\nend'
+        return ret
+
+    def ipv6_host_dumpconfig(self):
+        ret = '\nedit ' + self.short_name + '_' + self.ipv6address
+        ret += '\nset ip6 ' + self.ipv6address
+        ret += '\nend'
+        return ret
+
+    def key_networkID_vdom(networkList):
+        networkID_vdom_list = {}
+        for entry in networkList:
+            if entry.vdom != '':
+                networkID_vdom_list[entry.id] = entry.vdom
+            else:
+                continue
+        return networkID_vdom_list
+
+    def get_host_interface(self, hostList):
+        host_in_network = {}
+        for entry in hostList:
+            host_in_network[entry.network_id] = self.short_name
+        return host_in_network
+        
+    @staticmethod
+    def getList(conn,interfaceList):
+        c = conn.cursor()
+        conn.text_factory = str
+        c.execute('''
+select distinct
+case when iv.vrf_vdom = 'vrf' THEN
+replace(replace(iv.value,'mgmt','dreamhack'),'prod','production')
+ELSE
+iv.value
+end
+,iv.network_id
+,iv.name
+,iv.short_name
+,iv.vlan
+,iv.terminator
+,iv.ipv4_txt
+,iv.ipv6_txt
+,iv.ipv4_netmask_txt
+,iv.ipv6_netmask_txt
+,iv.ipv4_gateway_txt
+,iv.ipv6_gateway_txt
+,iv.ipv6_capable
+from(
+select
+opt.value
+,opt.name vrf_vdom
+,nw.node_id network_id
+,nw.name
+,nw.short_name
+,nw.vlan
+,nw.terminator
+,nw.ipv4_txt
+,nw.ipv6_txt
+,nw.ipv4_netmask_txt
+,nw.ipv6_netmask_txt
+,nw.ipv4_gateway_txt
+,nw.ipv6_gateway_txt
+,nw.ipv6_capable
+from option opt
+join network nw on nw.node_id = opt.node_id and opt.name in ('vdom', 'vrf')
+UNION
+select
+''
+,'' vrf_vdom
+,nw.node_id network_id
+,nw.name
+,nw.short_name
+,nw.vlan
+,nw.terminator
+,nw.ipv4_txt
+,nw.ipv6_txt
+,nw.ipv4_netmask_txt
+,nw.ipv6_netmask_txt
+,nw.ipv4_gateway_txt
+,nw.ipv6_gateway_txt
+,nw.ipv6_capable
+from network nw
+) iv
+''')
+        list = []
+        for data in c.fetchall():
+            nw = Network(data)
+            print("network name:" + nw.name)
+            for interface in interfaceList:
+                print("trying interface",interface.name)
+                if nw.is_outside_nw and interface.is_outside:
+                    print("\tis outside")
+                    interface.networkList.append(nw)
+                else:
+                    print("is if.vdom same as nw.vdom? if:" + interface.vdom + "nw:" + nw.vdom)
+                    if interface.vdom == nw.vdom:
+                        print("\t\tYES! matches vdom:" + nw.vdom)
+                        if nw.is_link_net:
+                            print("\t\tis linknet")
+                            interface.networkList.append(nw)
+                        elif nw.id == interface.node_id:
+                            print("\t\tis directly connected")
+                            interface.networkList.append(nw)
+
+                    else:
+                        print("NO!")
+                    
+            list.append(nw)
+        return list
